@@ -1,22 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { addJob, deleteJob, setJobs, editJob } from '../store/auth/jobSlice';
-import { RootState } from '../store/store';
+import type { RootState } from '../store/store'; // Importa el tipo RootState
+import type { Job } from '../store/auth/jobSlice';
 import trackMyJobApi from '../api/trackMyJobApi';
 import Swal from 'sweetalert2';
 
-interface Job {
-  id: string;
-  date: string;
-  title: string;
-  company: string;
-  location: string;
-  status: string;
-  notes: string;
-  user: {
-    _id: string;
-    name: string;
-  };
-}
+
 
 export const useJobStore = () => {
   const dispatch = useDispatch();
@@ -38,6 +27,7 @@ export const useJobStore = () => {
       const { data } = await trackMyJobApi.get('/jobs');
 
       // Filtra los trabajos para incluir solo los del usuario actual basado en el name
+      if (!currentUser) return;
       const userJobs = data.jobs.filter((job: Job) => job.user && job.user.name === currentUser.name);
 
       dispatch(setJobs(userJobs));

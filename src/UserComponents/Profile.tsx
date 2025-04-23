@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
 
   const handleLogout = () => {
     // Limpia el estado de autenticación y redirige al login
-    dispatch(logout({}));
+    dispatch(logout(undefined));
     localStorage.clear(); // Limpia el token y otros datos almacenados
     navigate("/login"); // Redirige al usuario a la página de login
   };

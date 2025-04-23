@@ -25,7 +25,7 @@ export const LoginForm = () => {
 
   const navigate = useNavigate();
 
-  const loginSubmit = async (e: React.FormEvent<HTMLFormElement>): void => {
+  const loginSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
    
     const isAuthenticated = await startLogin({ email: loginEmail, password: loginPassword  });

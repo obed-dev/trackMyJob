@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../store/store'; // Importa el tipo RootState
 import  trackMyJobApi  from '../api/trackMyJobApi';
 import { clearErrorMessage , login , logout , onChecking } from '../store/auth/authSlice';
 import { Dispatch } from 'redux';
@@ -18,15 +19,10 @@ interface RegisterParams {
   name: string;
 }
 
-// Define la forma del estado de autenticación
-interface AuthState {
-  status: string; // 'checking', 'authenticated', 'not-authenticated'
-  user: { name: string; uid: string } | null;
-  errorMessage: string | null;
-}
+
 
 export const useAuthStore = () => {
-  const { status, user, errorMessage } = useSelector((state: AuthState) => state.auth); 
+  const { status, user, errorMessage } = useSelector((state: RootState) => state.auth);
   const dispatch: Dispatch = useDispatch(); 
 
   const startLogin = async ({ email, password }: LoginParams): Promise<boolean> => {
@@ -35,7 +31,7 @@ export const useAuthStore = () => {
       const { data } = await trackMyJobApi.post('/auth', { email, password });
       localStorage.setItem('token', data.token);
       localStorage.setItem('token-init-date', new Date().getTime().toString());
-      dispatch(login({ name: data.name, uid: data.uuid })); // Cambia 'uid' por 'uuid'
+      dispatch(login({ id: data.id, name: data.name, email: data.email })); // Cambia 'uid' por 'uuid'
       return true;
      
     } catch (error: any) {
@@ -60,7 +56,7 @@ export const useAuthStore = () => {
       const { data } = await trackMyJobApi.post('/auth/register', { email, password, name });
       localStorage.setItem('token', data.token);
       localStorage.setItem('token-init-date', new Date().getTime().toString());
-      dispatch(login({ name: data.name, uid: data.uid }));
+      dispatch(login({ id: data.id, name: data.name, email: data.email }));
     } catch (error: any) {
       dispatch(logout(error.response?.data?.msg || '--'));
       setTimeout(() => {
@@ -80,7 +76,7 @@ export const useAuthStore = () => {
      
       localStorage.setItem('token', data.token);
       localStorage.setItem('token-init-date', new Date().getTime().toString());
-      dispatch(login({ name: data.name, uid: data.uid }));
+      dispatch(login({ id: data.id, name: data.name, email: data.email }));
     } catch (error: any) {
     
       localStorage.clear();
@@ -91,7 +87,7 @@ export const useAuthStore = () => {
   const startLogout = (): void => {
     localStorage.clear();
    
-    dispatch(logout({}));
+    dispatch(logout(undefined));
   };
 
   return {

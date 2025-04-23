@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Job {
+export interface Job {
   id: string;
   date: string;
   title: string;
@@ -14,7 +14,7 @@ interface Job {
   };
 }
 
-interface JobState {
+export interface JobState {
   jobs: Job[];
 }
 

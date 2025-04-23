@@ -37,7 +37,7 @@ const TableComponent: React.FC = () => {
           status,
           notes,
           date: new Date().toISOString(),
-          user: { _id: currentUser.uid, name: currentUser.name }, 
+          user: { _id: currentUser!.id, name: currentUser!.name },
         });
         setEditingJobId(null);
        

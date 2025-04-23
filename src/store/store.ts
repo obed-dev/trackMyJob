@@ -1,18 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './auth/authSlice'; 
-import jobReducer from './auth/jobSlice'; 
+import authReducer from './auth/authSlice';
+import jobReducer from './auth/jobSlice';
+// Importa el tipo JobState
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer, // Reducer para la autenticación
-    jobs: jobReducer,  // Reducer para los trabajos
+    auth: authReducer,
+    jobs: jobReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Desactiva la verificación de serialización si es necesario
+      serializableCheck: false,
     }),
 });
 
-// Tipos para el estado global y el dispatch
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

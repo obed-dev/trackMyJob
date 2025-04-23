@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from "../hooks/useAuthStore";
 import { useForm } from '../hooks';
@@ -27,7 +27,7 @@ export const Register = () => {
 
    const navigate = useNavigate();
 
-  const registerSubmit = async (e: React.FormEvent<HTMLFormElement>): void => {
+  const registerSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     
     // Validación: Contraseña debe tener al menos 6 caracteres

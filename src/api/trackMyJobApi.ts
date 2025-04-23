@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
 import { getEnvVariables } from "../helpers/getEnvVariables";
 
 const { api_URL } = getEnvVariables();
@@ -13,7 +13,7 @@ trackMyJobApi.interceptors.request.use( config => {
   
 
   if (!config.headers) {
-    config.headers = {};
+    config.headers = config.headers || {};
   }
 
   config.headers['x-token'] = token;
