@@ -16,8 +16,8 @@
 ## Technologies Used
 
 - **Front-end**: HTML, CSS ,Tailwind, TypeScript , React
-- **Back-end**: Java
-- **Database**: MySQL
+- **Back-end**: Express.js , Node.js
+- **Database**: MongoDB
 - **Other Tools**: Git & Github
 
 ## Installation
