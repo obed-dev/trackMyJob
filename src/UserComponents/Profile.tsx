@@ -1,8 +1,32 @@
 import React from "react";
 import NavBar from "./NavBar";
 import perfil from "../assets/obed-animated.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { logout  } from "../store/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+
+
+
+ 
 
 const Profile: React.FC = () => {
+
+  const { user } = useSelector((state: { auth:any }) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  const handleLogout = () => {
+    // Limpia el estado de autenticación y redirige al login
+    dispatch(logout({}));
+    localStorage.clear(); // Limpia el token y otros datos almacenados
+    navigate("/login"); // Redirige al usuario a la página de login
+  };
+
+  
+
+
+
   return (
     <>
       <NavBar />
@@ -24,7 +48,7 @@ const Profile: React.FC = () => {
           <div className="p-6">
             <div className="flex flex-col sm:flex-row sm:justify-between items-center">
               <div className="text-center sm:text-left">
-                <h2 className="text-2xl font-montserrat font-bold text-black dark:text-darkText p-10">Obed Baltodano</h2>
+                <h2 className="text-2xl font-montserrat font-bold text-black dark:text-darkText p-10">{user?.name || "Guest"}</h2>
                 <p className="text-color2 font-montserrat font-bold dark:text-color5">Software Engineer</p>
                 <p className="text-color2 font-montserrat font-bold  dark:text-color5">San Jose, Costa Rica | 200+ connections</p>
               </div>
@@ -35,6 +59,13 @@ const Profile: React.FC = () => {
                 <button className="bg-buttons dark:bg-darkButtons text-white dark:text-darkText py-2 px-4 rounded-lg hover:bg-buttonsHover dark:hover:bg-darkButtonsHover">
                   Message
                 </button>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                >
+                  Logout
+                </button>
+
               </div>
             </div>
             <div className="mt-4">

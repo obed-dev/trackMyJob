@@ -28,6 +28,7 @@ export default {
         darkButtons: "#2b6cb0",
         darkButtonsHover: "#2c5282",
         darkBackground: "#2d3748",
+        darkModeThemeBackground : ''
       },
     },
   },

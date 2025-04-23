@@ -2,16 +2,20 @@ import { api_URL } from "../env";
 
 
 export interface Job {
-    id: number;
+    id: string;
+    title: string;
     date: string;
     company: string;
-    title: string;
+    location: string;
+    status: string;
+    notes: string;
     
     
   }
   
   export interface Credentials {
-    username: string;
+    name: string;
+    email: string;
     password: string;
   }
   

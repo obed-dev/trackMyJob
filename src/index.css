@@ -12,6 +12,7 @@
   --buttons: theme('colors.buttons');
   --button-hover: theme('colors.buttonsHover');
   --background: theme('colors.color3');
+ 
 }
 
 body {
