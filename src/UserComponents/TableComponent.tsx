@@ -20,7 +20,8 @@ const TableComponent: React.FC = () => {
     loadJobs();
   }, []);
 
-  const handleCreateOrUpdateJob = async () => {
+  const handleCreateOrUpdateJob = async (e:any) => {
+    e.preventDefault();
     if (!title || !company || !location || !status) {
       Swal.fire('Error', 'Please fill in all required fields', 'error');
       return;
@@ -39,6 +40,7 @@ const TableComponent: React.FC = () => {
           user: { _id: currentUser.uid, name: currentUser.name }, 
         });
         setEditingJobId(null);
+       
       } else {
         await createJob(title, company, location, status, notes);
       }
@@ -96,54 +98,54 @@ const TableComponent: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-darkBackground text-color1 dark:text-darkText text-sm font-light">
-            {jobs.map((job) => (
-              <tr key={job.id} className="border-b border-color2 dark:border-darkColor2 hover:bg-color1 hover:text-white dark:hover:bg-darkColor3">
-                <td className="py-3 px-6 text-left whitespace-nowrap font-montserrat">{job.date}</td>
-                <td className="py-3 px-6 text-left font-montserrat">{job.title}</td>
-                <td className="py-3 px-6 text-left font-montserrat">{job.company}</td>
-                <td className="py-3 px-6 text-left flex gap-2">
-                  <button
-                    onClick={() => handleEditJob(job)}
-                    className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteJob(job.id)}
-                    className="bg-buttons dark:bg-darkButtons text-white py-2 px-4 rounded-lg hover:bg-buttonsHover dark:hover:bg-darkButtonsHover"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {jobs.map((job, index) => (
+    <tr key={job.id || index} className="border-b border-color2 dark:border-darkColor2 hover:bg-color1 hover:text-white dark:hover:bg-darkColor3">
+      <td className="py-3 px-6 text-left whitespace-nowrap font-montserrat">{job.date}</td>
+      <td className="py-3 px-6 text-left font-montserrat">{job.title}</td>
+      <td className="py-3 px-6 text-left font-montserrat">{job.company}</td>
+      <td className="py-3 px-6 text-left flex gap-2">
+        <button
+          onClick={() => handleEditJob(job)}
+          className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDeleteJob(job.id)}
+          className="bg-buttons dark:bg-darkButtons text-white py-2 px-4 rounded-lg hover:bg-buttonsHover dark:hover:bg-darkButtonsHover"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
         <div className="max-w-md mx-auto p-6 bg-white dark:bg-darkBackground rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4 text-color1 dark:text-color5">
             {editingJobId ? 'Edit Job' : 'Create New Job'}
           </h2>
           <input
-            type="text"
-            placeholder="Type your position"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="text"
-            placeholder="Type your company"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="text"
-            placeholder="Type job location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+  type="text"
+  placeholder="Type your position"
+  value={title || ''} // Asegúrate de que nunca sea undefined
+  onChange={(e) => setTitle(e.target.value)}
+  className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+/>
+<input
+  type="text"
+  placeholder="Type your company"
+  value={company || ''} // Asegúrate de que nunca sea undefined
+  onChange={(e) => setCompany(e.target.value)}
+  className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+/>
+<input
+  type="text"
+  placeholder="Type job location"
+  value={location || ''} // Asegúrate de que nunca sea undefined
+  onChange={(e) => setLocation(e.target.value)}
+  className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+/>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}

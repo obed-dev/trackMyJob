@@ -54,12 +54,12 @@ export const useJobStore = () => {
     notes: string
   ): Promise<void> => {
     if (!validateUser()) return;
-
+  
     if (!title || !company || !location || !status) {
       Swal.fire('Error', 'Please fill in all required fields', 'error');
       return;
     }
-
+  
     const newJob = {
       date: new Date().toISOString(),
       title,
@@ -67,13 +67,14 @@ export const useJobStore = () => {
       location,
       status,
       notes,
-      user: { _id: currentUser!.uid, name: currentUser!.name }, // Usamos el name del usuario actual
+      user: { _id: currentUser!.uid, name: currentUser!.name },
     };
-
+  
     try {
       const { data } = await trackMyJobApi.post('/jobs', newJob);
-      dispatch(addJob(data));
+      dispatch(addJob(data)); // Actualiza el estado global con el nuevo trabajo
       Swal.fire('Success', 'Job created successfully', 'success');
+      loadJobs(); // Recarga los trabajos después de crear uno nuevo
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to create job';
       Swal.fire('Error', errorMessage, 'error');
