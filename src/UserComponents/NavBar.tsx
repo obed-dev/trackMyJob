@@ -2,19 +2,19 @@ import { Link } from 'react-router-dom';
 
 const NavBar = () => {
   return (
-    <nav className="bg-color1 p-6 dark:bg-darkColor2">
+    <nav className="bg-color1 p-6 dark:bg-darkColor2 mb-4">
       <div className="container mx-auto flex flex-wrap items-center justify-between md:justify-center">
         <div className="w-full flex justify-between md:hidden">
-          <h1 className="text-white font-montserrat font-bold text-lg">TrackMyJob</h1>
+          <h1 className="text-white font-montserrat font-bold text-sm md:text-lg">TrackMyJob</h1>
           <button
-            className="text-white focus:outline-none"
+            className="text-white focus:outline-none mt-2"
             onClick={() => {
               const menu = document.getElementById('mobile-menu');
               if (menu) menu.classList.toggle('hidden');
             }}
           >
             <svg
-              className="w-6 h-6"
+              className="w-4 h-4 md:w-6 md:h-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -31,7 +31,7 @@ const NavBar = () => {
         </div>
         <ul
           id="mobile-menu"
-          className="hidden w-full md:flex md:w-auto md:space-x-16 md:items-center md:justify-center"
+          className="hidden w-full md:flex md:w-auto md:space-x-16 md:items-center md:justify-center space-y-4 md:space-y-0"
         >
           <li className="transition-transform duration-500 ease-in-out transform hover:scale-125 font-montserrat font-bold">
             <Link to="/TableComponent" className="text-white block py-2 md:py-0">
