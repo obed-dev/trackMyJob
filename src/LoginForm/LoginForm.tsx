@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "../hooks/index";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../hooks/useAuthStore";
-
+import { api_URL } from "../env";
 
 interface LoginFormFields {
   loginEmail: string;
@@ -23,13 +23,14 @@ export const LoginForm = () => {
   const { startLogin  } = useAuthStore();
   const { loginEmail, loginPassword ,  onInputChange: onLoginInputChange } = useForm(loginFormFields);
 
+   
   const navigate = useNavigate();
 
   const loginSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
    
     const isAuthenticated = await startLogin({ email: loginEmail, password: loginPassword  });
-    
+    console.log(api_URL);
     if (isAuthenticated) {
       navigate('/profile'); // Navega a /profile si las credenciales son correctas
     }
