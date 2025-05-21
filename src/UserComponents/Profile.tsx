@@ -75,7 +75,7 @@ const Profile: React.FC = () => {
       : perfil
   }
   alt="Profile"
-  className="w-24 h-24 rounded-full border-4 border-color4 dark:border-darkColor2 object-cover"
+  className="w-24 h-24 rounded-full border-4 border-color4 dark:border-darkColor2 object-fill"
 />
               {editing && (
                 <input
