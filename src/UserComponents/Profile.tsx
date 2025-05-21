@@ -1,31 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { api_URL } from "../env";
 import NavBar from "./NavBar";
 import perfil from "../assets/obed-animated.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { logout  } from "../store/auth/authSlice";
+import { logout } from "../store/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-
-
-
- 
+import { useAuthStore } from "../hooks/useAuthStore";
 
 const Profile: React.FC = () => {
-
-  const { user } = useSelector((state: { auth:any }) => state.auth);
+  const { user } = useSelector((state: { auth: any }) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { startUpdateProfile } = useAuthStore();
 
+  const [editing, setEditing] = useState(false);
+  const [description, setDescription] = useState(user?.description || "");
+  const [profileImage, setProfileImage] = useState(
+    user?.profileImage || perfil
+  );
+  const [newImgFile, setNewImgFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Sincroniza el estado local con Redux cuando el usuario cambia
+  useEffect(() => {
+    setDescription(user?.description || "");
+    setProfileImage(user?.profileImage || perfil);
+  }, [user]);
 
   const handleLogout = () => {
-    // Limpia el estado de autenticación y redirige al login
     dispatch(logout(undefined));
-    localStorage.clear(); // Limpia el token y otros datos almacenados
-    navigate("/login"); // Redirige al usuario a la página de login
+    localStorage.clear();
+    navigate("/login");
   };
 
-  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewImgFile(e.target.files[0]);
+      setProfileImage(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
-
+  const handleSave = async () => {
+    setLoading(true);
+    const success = await startUpdateProfile({
+      name: user?.name || "",
+      description,
+      profileImage: newImgFile,
+    });
+    if (success) {
+      setEditing(false);
+      setNewImgFile(null);
+    }
+    setLoading(false);
+  };
 
   return (
     <>
@@ -40,54 +67,89 @@ const Profile: React.FC = () => {
             />
             <div className="absolute left-4 bottom-0 transform translate-y-1/2">
               <img
-                src={perfil}
-                className="w-24 h-24 rounded-full border-4 border-color4 dark:border-darkColor2"
+                src={
+                  profileImage
+                    ? profileImage.startsWith("http")
+                      ? profileImage
+                      : `${api_URL}${profileImage.replace(/\\/g, "/")}`
+                    : perfil // imagen por defecto
+                }
+                className="w-24 h-24 rounded-full border-4 border-color4 dark:border-darkColor2 object-cover"
+                alt="Profile"
               />
+              {editing && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="mt-2"
+                  onChange={handleImageChange}
+                />
+              )}
             </div>
           </div>
           <div className="p-6">
             <div className="flex flex-col sm:flex-row sm:justify-between items-center">
               <div className="text-center sm:text-left">
-                <h2 className="text-2xl font-montserrat font-bold text-black dark:text-darkText p-10">{user?.name || "Guest"}</h2>
-                <p className="text-color2 font-montserrat font-bold dark:text-color5">Software Engineer</p>
-                <p className="text-color2 font-montserrat font-bold  dark:text-color5">San Jose, Costa Rica | 200+ connections</p>
+                <h2 className="text-2xl font-montserrat font-bold text-black dark:text-darkText p-10">
+                  {user?.name || "Guest"}
+                </h2>
+                <p className="text-color2 font-montserrat font-bold dark:text-color5">
+                  Software Engineer
+                </p>
+                <p className="text-color2 font-montserrat font-bold  dark:text-color5">
+                  San Jose, Costa Rica | 200+ connections
+                </p>
               </div>
               <div className="mt-4 sm:mt-0 sm:flex-row space-y-2 sm:space-y-2 sm:space-x-2">
-                <button className="bg-buttons dark:bg-darkButtons text-white py-2 px-4 rounded-lg hover:bg-buttonsHover dark:hover:bg-darkButtonsHover">
-                  Connect
-                </button>
-                <button className="bg-buttons dark:bg-darkButtons text-white dark:text-darkText py-2 px-4 rounded-lg hover:bg-buttonsHover dark:hover:bg-darkButtonsHover">
-                  Message
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-                >
-                  Logout
-                </button>
-
+                {!editing ? (
+                  <>
+                    <button
+                      className="bg-buttons dark:bg-darkButtons text-white py-2 px-4 rounded-lg hover:bg-buttonsHover dark:hover:bg-darkButtonsHover"
+                      onClick={() => setEditing(true)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
+                      onClick={handleSave}
+                      disabled={loading}
+                    >
+                      {loading ? "Saving..." : "Save"}
+                    </button>
+                    <button
+                      className="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+                      onClick={() => setEditing(false)}
+                      disabled={loading}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             <div className="mt-4">
-              <p className="text-color1 dark:text-darkText font-montserrat font-bold">
-                Experienced software engineer with a passion for developing innovative programs that
-                expedite the efficiency and effectiveness of organizational success.
-              </p>
-            </div>
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="font-semibold text-color1 dark:text-darkText font-montserrat font-bold">Experience</h3>
-                <ul className="mt-2 list-disc list-inside text-color1 dark:text-darkText font-montserrat ">
-                  <li>Junior Software Engineer at Tech Company</li>
-                  <li>Software Engineer at Another Company</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold text-color1 dark:text-darkText">Education</h3>
-                <ul className="mt-2 list-disc list-inside text-color1 dark:text-darkText">
-                  <li>Web Development Postgraduate from Fidelitas University</li>
-                </ul>
-              </div>
+              {!editing ? (
+                <p className="text-color1 dark:text-darkText font-montserrat font-bold">
+                  {user?.description ||
+                    "Experienced software engineer with a passion for developing innovative programs that expedite the efficiency and effectiveness of organizational success."}
+                </p>
+              ) : (
+                <textarea
+                  className="w-full p-2 border rounded"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                />
+              )}
             </div>
           </div>
         </div>

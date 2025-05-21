@@ -19,6 +19,12 @@ interface RegisterParams {
   name: string;
 }
 
+interface UpdateProfileParams {
+  name: string;
+  description: string;
+  profileImage?: File | null;
+}
+
 
 
 export const useAuthStore = () => {
@@ -84,6 +90,37 @@ export const useAuthStore = () => {
     }
   };
 
+  const startUpdateProfile = async ({ name, description, profileImage }: UpdateProfileParams): Promise<boolean> => {
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
+
+      const { data } = await trackMyJobApi.put('/auth/profile', formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      dispatch(login({
+        ...user,
+        ...data.user,
+      }));
+
+      return true;
+    } catch (error: any) {
+      Swal.fire({
+        title: 'Error',
+        text: "No se pudo actualizar el perfil",
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return false;
+    }
+  };
+
+
   const startLogout = (): void => {
     localStorage.clear();
    
@@ -101,5 +138,6 @@ export const useAuthStore = () => {
     startLogin,
     startLogout,
     startRegister,
+    startUpdateProfile,
   };
 };
