@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { api_URL } from "../env";
+import { static_URL } from "../env";
 import NavBar from "./NavBar";
 import perfil from "../assets/obed-animated.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -67,16 +67,16 @@ const Profile: React.FC = () => {
             />
             <div className="absolute left-4 bottom-0 transform translate-y-1/2">
               <img
-                src={
-                  profileImage
-                    ? profileImage.startsWith("http")
-                      ? profileImage
-                      : `${api_URL}${profileImage.replace(/\\/g, "/")}`
-                    : perfil // imagen por defecto
-                }
-                className="w-24 h-24 rounded-full border-4 border-color4 dark:border-darkColor2 object-cover"
-                alt="Profile"
-              />
+  src={
+    profileImage
+      ? profileImage.startsWith("http")
+        ? profileImage
+        : `${static_URL}${profileImage.replace(/\\/g, "/")}`
+      : perfil
+  }
+  alt="Profile"
+  className="w-24 h-24 rounded-full border-4 border-color4 dark:border-darkColor2 object-cover"
+/>
               {editing && (
                 <input
                   type="file"
