@@ -18,7 +18,7 @@
 - **Front-end**: HTML, CSS ,Tailwind, TypeScript , React
 - **Back-end**: Express.js , Node.js
 - **Database**: MongoDB
-- **Other Tools**: Git & Github
+- **Other Tools**: Git ,Github & Docker
 
 ## Installation
 
